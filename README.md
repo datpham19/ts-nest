@@ -78,3 +78,11 @@ Nest is [MIT licensed](LICENSE).
 nest new <projectname> # Generate new project
 nest g co <featurename> # Generate controller feature (controller.spec, controller)
 ```
+
+```markdown
+*.spec.ts: unit test
+```
+
+Module small: 5 files
+Module medium: 3 files + 2 dir `dtos/` `interfaces/` 
+

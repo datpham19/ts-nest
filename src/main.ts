@@ -1,13 +1,18 @@
 import { NestFactory } from '@nestjs/core';
-import { UserModule } from './features/user/user.module';
-import { ConfigService } from "@nestjs/config";
-import { AppModule } from "./app.module";
-
-
+import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import config from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
-  await app.listen(configService.get('APP_PORT'));
+  const appConfig = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, appConfig);
+  SwaggerModule.setup('api', app, document);
+  await app.listen(config.appPort);
 }
 bootstrap();
