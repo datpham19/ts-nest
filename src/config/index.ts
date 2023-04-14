@@ -9,48 +9,54 @@ const env = dotenvExtended.load({
   includeProcessEnv: true,
   silent: false,
   errorOnMissing: true,
-  errorOnExtra: true
+  errorOnExtra: true,
 });
-
 
 const parsedEnv = dotenvParseVariables(env);
 
 // Define log levels type (silent + Winston default npm)
-type LogLevel = 'silent' | 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
+type LogLevel =
+  | 'silent'
+  | 'error'
+  | 'warn'
+  | 'info'
+  | 'http'
+  | 'verbose'
+  | 'debug'
+  | 'silly';
 
 interface Config {
-  appPort: number
-  privateKeyFile: string
-  privateKeyPassphrase: string
-  publicKeyFile: string,
+  appPort: number;
+  privateKeyFile: string;
+  privateKeyPassphrase: string;
+  publicKeyFile: string;
 
-  localCacheTtl: number,
+  localCacheTtl: number;
 
-  redisUrl: string,
+  redisUrl: string;
 
   mongo: {
-    host: string,
-    port: number,
-    user: string,
-    password: string,
-    database: string,
-    useCreateIndex: boolean,
-    autoIndex: boolean,
-    debug: boolean
-  },
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+    useCreateIndex: boolean;
+    autoIndex: boolean;
+    debug: boolean;
+  };
 
   pg: {
-    host: string,
-    port: number,
-    user: string,
-    password: string,
-    database: string
-  }
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+  };
 
-  morganLogger: boolean
-  morganBodyLogger: boolean
-  exmplDevLogger: boolean
-  loggerLevel: LogLevel
+  morganLogger: boolean;
+  morganBodyLogger: boolean;
+  loggerLevel: LogLevel;
 }
 
 const config: Config = {
@@ -79,13 +85,12 @@ const config: Config = {
     port: parsedEnv.PG_PORT as number,
     user: parsedEnv.PG_USERNAME as string,
     password: parsedEnv.PG_PASSWORD as string,
-    database: parsedEnv.PG_NAME as string
+    database: parsedEnv.PG_NAME as string,
   },
 
   morganLogger: parsedEnv.MORGAN_LOGGER as boolean,
   morganBodyLogger: parsedEnv.MORGAN_BODY_LOGGER as boolean,
-  exmplDevLogger: parsedEnv.EXMPL_DEV_LOGGER as boolean,
-  loggerLevel: parsedEnv.LOGGER_LEVEL as LogLevel
+  loggerLevel: parsedEnv.LOGGER_LEVEL as LogLevel,
 };
 
 export default config;
