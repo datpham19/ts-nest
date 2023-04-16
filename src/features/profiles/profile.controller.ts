@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProfileService, IGenericMessageBody } from './profile.service';
 import { PatchProfileDto } from './profile.dto';
-import { IProfile } from '../../models/mongo/profile.model';
+import { Profile } from '../../models/mongo/profile.model';
 
 /**
  * Profile Controller
@@ -30,13 +30,17 @@ export class ProfileController {
   /**
    * Retrieves a particular profile
    * @param username the profile given username to fetch
-   * @returns {Promise<IProfile>} queried profile data
+   * @returns {Promise<Profile>} queried profile data
    */
   @Get(':username')
   @UseGuards(AuthGuard('jwt'))
-  @ApiResponse({ status: 200, description: 'Fetch Profile Request Received' })
+  @ApiResponse({
+    status: 200,
+    description: 'Fetch Profile Request Received',
+    type: Profile,
+  })
   @ApiResponse({ status: 400, description: 'Fetch Profile Request Failed' })
-  async getProfile(@Param('username') username: string): Promise<IProfile> {
+  async getProfile(@Param('username') username: string): Promise<Profile> {
     const profile = await this.profileService.getByUsername(username);
     if (!profile) {
       throw new BadRequestException(
@@ -48,8 +52,8 @@ export class ProfileController {
 
   /**
    * Edit a profile
-   * @param {RegisterPayload} payload
-   * @returns {Promise<IProfile>} mutated profile data
+   * @param {RegisterDto} payload
+   * @returns {Promise<Profile>} mutated profile data
    */
   @Patch()
   @UseGuards(AuthGuard('jwt'))

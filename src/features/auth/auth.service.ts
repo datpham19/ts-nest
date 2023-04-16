@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { ProfileService } from '../profiles/profile.service';
-import { IProfile } from '../../models/mongo/profile.model';
+import { Profile } from '../../models/mongo/profile.model';
 import { LoginDto } from './dtos/login.dto';
 import { ConfigService } from '../../config/config.service';
 
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   /**
-   * Creates a signed jwt token based on IProfile payload
+   * Creates a signed jwt token based on Profile payload
    * @param {Profile} param dto to generate token from
    * @returns {Promise<ITokenReturnBody>} token body
    */
@@ -58,12 +58,11 @@ export class AuthService {
     _id,
     username,
     email,
-    avatar,
-  }: IProfile): Promise<ITokenReturnBody> {
+  }: Profile): Promise<ITokenReturnBody> {
     return {
       expires: this.expiration,
       expiresPrettyPrint: AuthService.prettyPrintSeconds(this.expiration),
-      token: this.jwtService.sign({ _id, username, email, avatar }),
+      token: this.jwtService.sign({ _id, username, email }),
     };
   }
 
@@ -85,10 +84,10 @@ export class AuthService {
 
   /**
    * Validates whether or not the profile exists in the database
-   * @param {LoginPayload} payload login payload to authenticate with
-   * @returns {Promise<IProfile>} registered profile
+   * @param {LoginDto} payload login payload to authenticate with
+   * @returns {Promise<Profile>} registered profile
    */
-  async validateUser(payload: LoginDto): Promise<IProfile> {
+  async validateUser(payload: LoginDto): Promise<Profile> {
     const user = await this.profileService.getByUsernameAndPass(
       payload.username,
       payload.password,

@@ -1,4 +1,3 @@
-import { UserModule } from './features/user/user.module';
 import { Module } from '@nestjs/common';
 import { AuthModule } from './features/auth/auth.module';
 import { DatabaseModule } from './lib/lib.module';
@@ -16,8 +15,8 @@ import { ProfileModule } from './features/profiles/profile.module';
       useFactory: (configService: ConfigService) =>
         ({
           uri: uri,
-          user: configService.get('mongo.user'),
-          pass: configService.get('mongo.password'),
+          user: configService.get('MONGO_USERNAME'),
+          pass: configService.get('MONGO_PASSWORD'),
           useNewUrlParser: true,
           useUnifiedTopology: true,
         } as MongooseModuleAsyncOptions),
@@ -27,7 +26,6 @@ import { ProfileModule } from './features/profiles/profile.module';
       ttl: 60,
       limit: 10,
     }),
-    UserModule,
     ProfileModule,
     AuthModule,
   ],

@@ -7,7 +7,7 @@ import {
   NotAcceptableException,
 } from '@nestjs/common';
 
-import { IProfile } from '../../models/mongo/profile.model';
+import { Profile, ProfileDocument } from '../../models/mongo/profile.model';
 
 import { RegisterDto } from '../auth/dtos/register.dto';
 import { AppRoles } from '../../config/app.roles';
@@ -30,27 +30,28 @@ export interface IGenericMessageBody {
 export class ProfileService {
   /**
    * Constructor
-   * @param {Model<IProfile>} profileModel
+   * @param {Model<Profile>} profileModel
    */
   constructor(
-    @InjectModel('Profile') private readonly profileModel: Model<IProfile>,
+    @InjectModel(Profile.name)
+    private readonly profileModel: Model<ProfileDocument>,
   ) {}
 
   /**
    * Fetches a profile from database by UUID
    * @param {string} id
-   * @returns {Promise<IProfile>} queried profile data
+   * @returns {Promise<Profile>} queried profile data
    */
-  get(id: string): Promise<IProfile> {
+  get(id: string): Promise<Profile> {
     return this.profileModel.findById(id).exec();
   }
 
   /**
    * Fetches a profile from database by username
    * @param {string} username
-   * @returns {Promise<IProfile>} queried profile data
+   * @returns {Promise<Profile>} queried profile data
    */
-  getByUsername(username: string): Promise<IProfile> {
+  getByUsername(username: string): Promise<Profile> {
     return this.profileModel.findOne({ username }).exec();
   }
 
@@ -58,9 +59,9 @@ export class ProfileService {
    * Fetches a profile by their username and hashed password
    * @param {string} username
    * @param {string} password
-   * @returns {Promise<IProfile>} queried profile data
+   * @returns {Promise<Profile>} queried profile data
    */
-  getByUsernameAndPass(username: string, password: string): Promise<IProfile> {
+  getByUsernameAndPass(username: string, password: string): Promise<Profile> {
     return this.profileModel
       .findOne({
         username,
@@ -72,9 +73,9 @@ export class ProfileService {
   /**
    * Create a profile with RegisterPayload fields
    * @param {RegisterPayload} payload profile payload
-   * @returns {Promise<IProfile>} created profile data
+   * @returns {Promise<Profile>} created profile data
    */
-  async create(payload: RegisterDto): Promise<IProfile> {
+  async create(payload: RegisterDto): Promise<Profile> {
     const user = await this.getByUsername(payload.username);
     if (user) {
       throw new NotAcceptableException(
@@ -94,9 +95,9 @@ export class ProfileService {
   /**
    * Edit profile data
    * @param {PatchProfileDto} payload
-   * @returns {Promise<IProfile>} mutated profile data
+   * @returns {Promise<Profile>} mutated profile data
    */
-  async edit(payload: PatchProfileDto): Promise<IProfile> {
+  async edit(payload: PatchProfileDto): Promise<Profile> {
     const { username } = payload;
     const updatedProfile = await this.profileModel.updateOne(
       { username },
