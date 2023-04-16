@@ -56,7 +56,7 @@ export class ConfigService {
       PG_PASSWORD: joi.string().required(),
       PG_DATABASE: joi.string().required(),
       REDIS_HOST: joi.string().required(),
-      REDIS_PORT: joi.string().required(),
+      REDIS_PORT: joi.number().required(),
       REDIS_PASSWORD: joi.string().required(),
       REDIS_USERNAME: joi.string().required(),
       REDIS_DB: joi.string().required(),
@@ -76,7 +76,7 @@ export class ConfigService {
         )
         .default('info'),
       WEBTOKEN_SECRET_KEY: joi.string().required(),
-      WEBTOKEN_EXPIRES_IN: joi.number().default(1800),
+      WEBTOKEN_EXPIRATION_TIME: joi.number().default(1800),
     });
 
     /**

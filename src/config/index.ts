@@ -58,6 +58,14 @@ export interface Config {
     database: string;
   };
 
+  redis: {
+    host: string;
+    port: number;
+    password: string;
+    username: string;
+    db: number;
+  };
+
   morganLogger: boolean;
   morganBodyLogger: boolean;
   loggerLevel: LogLevel;
@@ -93,6 +101,14 @@ const config: Config = {
     user: parsedEnv.PG_USERNAME as string,
     password: parsedEnv.PG_PASSWORD as string,
     database: parsedEnv.PG_NAME as string,
+  },
+
+  redis: {
+    host: parsedEnv.REDIS_HOST as string,
+    port: parsedEnv.REDIS_PORT as number,
+    password: parsedEnv.REDIS_PASSWORD as string,
+    username: parsedEnv.REDIS_USERNAME as string,
+    db: parsedEnv.REDIS_DB as number,
   },
 
   morganLogger: parsedEnv.MORGAN_LOGGER as boolean,

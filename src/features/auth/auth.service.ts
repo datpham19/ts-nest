@@ -5,22 +5,19 @@ import { ProfileService } from '../profiles/profile.service';
 import { Profile } from '../../models/mongo/profile.model';
 import { LoginDto } from './dtos/login.dto';
 import { ConfigService } from '../../config/config.service';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 
 /**
  * Models a typical Login/Register route return body
  */
-export interface ITokenReturnBody {
-  /**
-   * When the token is to expire in seconds
-   */
+@ApiTags('auth')
+export class ITokenReturnBody {
+  @ApiProperty({
+    example: '3600',
+    description: 'When the token is to expire in seconds',
+  })
   expires: string;
-  /**
-   * A human-readable format of expires
-   */
-  expiresPrettyPrint: string;
-  /**
-   * The Bearer token
-   */
+  @ApiProperty({ example: 'token', description: 'The JWT token' })
   token: string;
 }
 
@@ -61,7 +58,6 @@ export class AuthService {
   }: Profile): Promise<ITokenReturnBody> {
     return {
       expires: this.expiration,
-      expiresPrettyPrint: AuthService.prettyPrintSeconds(this.expiration),
       token: this.jwtService.sign({ _id, username, email }),
     };
   }

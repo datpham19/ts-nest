@@ -22,7 +22,7 @@ import { Injectable } from '@nestjs/common';
 
 export type ProfileDocument = Profile & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Profile {
   @ApiProperty({
     description: 'MongoDB ObjectID',

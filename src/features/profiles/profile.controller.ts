@@ -9,30 +9,44 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiResponse,
+  ApiTags,
+  ApiOperation,
+  ApiUnprocessableEntityResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { ProfileService, IGenericMessageBody } from './profile.service';
 import { PatchProfileDto } from './profile.dto';
 import { Profile } from '../../models/mongo/profile.model';
+import { ApiHeaders } from '../../config/swagger';
 
-/**
- * Profile Controller
- */
 @ApiBearerAuth()
-@ApiTags('profile')
-@Controller('api/profile')
+@ApiTags('profiles')
+@Controller('api/profiles')
 export class ProfileController {
-  /**
-   * Constructor
-   * @param profileService
-   */
   constructor(private readonly profileService: ProfileService) {}
 
-  /**
-   * Retrieves a particular profile
-   * @param username the profile given username to fetch
-   * @returns {Promise<Profile>} queried profile data
-   */
+  @Get()
+  @ApiHeaders()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get all profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Fetch Profile Request Received',
+    type: Array<Profile>,
+  })
+  @ApiUnauthorizedResponse()
+  @ApiUnprocessableEntityResponse({
+    description: 'Fetch Profile Request Failed',
+  })
+  async getProfiles(): Promise<Profile[]> {
+    return await this.profileService.getAll();
+  }
+
   @Get(':username')
+  @ApiHeaders()
   @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     status: 200,
@@ -40,7 +54,7 @@ export class ProfileController {
     type: Profile,
   })
   @ApiResponse({ status: 400, description: 'Fetch Profile Request Failed' })
-  async getProfile(@Param('username') username: string): Promise<Profile> {
+  async getProfile(@Param('username') username?: string): Promise<Profile> {
     const profile = await this.profileService.getByUsername(username);
     if (!profile) {
       throw new BadRequestException(
@@ -50,24 +64,17 @@ export class ProfileController {
     return profile;
   }
 
-  /**
-   * Edit a profile
-   * @param {RegisterDto} payload
-   * @returns {Promise<Profile>} mutated profile data
-   */
-  @Patch()
+  @Patch(':username')
   @UseGuards(AuthGuard('jwt'))
   @ApiResponse({ status: 200, description: 'Patch Profile Request Received' })
   @ApiResponse({ status: 400, description: 'Patch Profile Request Failed' })
-  async patchProfile(@Body() payload: PatchProfileDto) {
+  async patchProfile(
+    @Body() payload: PatchProfileDto,
+    @Param('username') username: string,
+  ) {
     return await this.profileService.edit(payload);
   }
 
-  /**
-   * Removes a profile from the database
-   * @param {string} username the username to remove
-   * @returns {Promise<IGenericMessageBody>} whether or not the profile has been deleted
-   */
   @Delete(':username')
   @UseGuards(AuthGuard('jwt'))
   @ApiResponse({ status: 200, description: 'Delete Profile Request Received' })

@@ -28,39 +28,23 @@ export interface IGenericMessageBody {
  */
 @Injectable()
 export class ProfileService {
-  /**
-   * Constructor
-   * @param {Model<Profile>} profileModel
-   */
   constructor(
     @InjectModel(Profile.name)
     private readonly profileModel: Model<ProfileDocument>,
   ) {}
 
-  /**
-   * Fetches a profile from database by UUID
-   * @param {string} id
-   * @returns {Promise<Profile>} queried profile data
-   */
   get(id: string): Promise<Profile> {
     return this.profileModel.findById(id).exec();
   }
 
-  /**
-   * Fetches a profile from database by username
-   * @param {string} username
-   * @returns {Promise<Profile>} queried profile data
-   */
+  getAll(): Promise<Profile[]> {
+    return this.profileModel.find().exec();
+  }
+
   getByUsername(username: string): Promise<Profile> {
     return this.profileModel.findOne({ username }).exec();
   }
 
-  /**
-   * Fetches a profile by their username and hashed password
-   * @param {string} username
-   * @param {string} password
-   * @returns {Promise<Profile>} queried profile data
-   */
   getByUsernameAndPass(username: string, password: string): Promise<Profile> {
     return this.profileModel
       .findOne({
@@ -70,11 +54,6 @@ export class ProfileService {
       .exec();
   }
 
-  /**
-   * Create a profile with RegisterPayload fields
-   * @param {RegisterPayload} payload profile payload
-   * @returns {Promise<Profile>} created profile data
-   */
   async create(payload: RegisterDto): Promise<Profile> {
     const user = await this.getByUsername(payload.username);
     if (user) {
@@ -92,11 +71,6 @@ export class ProfileService {
     return createdProfile.save();
   }
 
-  /**
-   * Edit profile data
-   * @param {PatchProfileDto} payload
-   * @returns {Promise<Profile>} mutated profile data
-   */
   async edit(payload: PatchProfileDto): Promise<Profile> {
     const { username } = payload;
     const updatedProfile = await this.profileModel.updateOne(
@@ -111,11 +85,6 @@ export class ProfileService {
     return this.getByUsername(username);
   }
 
-  /**
-   * Delete profile given a username
-   * @param {string} username
-   * @returns {Promise<IGenericMessageBody>} whether or not the crud operation was completed
-   */
   delete(username: string): Promise<IGenericMessageBody> {
     return this.profileModel.deleteOne({ username }).then((profile) => {
       if (profile.deletedCount === 1) {

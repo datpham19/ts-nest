@@ -1,18 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from '../auth/auth.controller';
+import { ProfileController } from './profile.controller';
+import { ProfileService } from './profile.service';
+import { Profile } from '../../models/mongo/profile.model';
 
-describe('AuthController', () => {
-  let controller: AuthController;
+jest.mock('./profile.service');
+
+describe('ProfileController', () => {
+  let controller: ProfileController;
+  let service: ProfileService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
+      controllers: [ProfileController],
+      providers: [ProfileService],
     }).compile();
 
-    controller = module.get<AuthController>(AuthController);
+    controller = module.get<ProfileController>(ProfileController);
+    service = module.get<ProfileService>(ProfileService);
+    jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('get', () => {
+    describe('when getProfile is called', () => {
+      let profiles: Profile[];
+      beforeEach(async () => {
+        profiles = await controller.getProfiles();
+      });
+      test('should call profileService.getAll', () => {
+        expect(service.getAll).toHaveBeenCalled();
+      });
+    });
   });
 });

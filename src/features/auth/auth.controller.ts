@@ -26,7 +26,11 @@ export class AuthController {
    * @param {LoginDto} payload the login dto
    */
   @Post('login')
-  @ApiResponse({ status: 201, description: 'Login Completed' })
+  @ApiResponse({
+    status: 201,
+    description: 'Login Completed',
+    type: ITokenReturnBody,
+  })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async login(@Body() payload: LoginDto): Promise<ITokenReturnBody> {
@@ -39,7 +43,11 @@ export class AuthController {
    * @param {RegisterPayload} payload the registration dto
    */
   @Post('register')
-  @ApiResponse({ status: 201, description: 'Registration Completed' })
+  @ApiResponse({
+    status: 201,
+    description: 'Registration Completed',
+    type: ITokenReturnBody,
+  })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async register(@Body() payload: RegisterDto): Promise<ITokenReturnBody> {
