@@ -9,11 +9,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ACGuard, UseRoles } from 'nest-access-control';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProfileService, IGenericMessageBody } from './profile.service';
-import { IProfile } from '../../models/mongo/profile.model';
 import { PatchProfileDto } from './profile.dto';
+import { IProfile } from '../../models/mongo/profile.model';
 
 /**
  * Profile Controller
@@ -54,11 +53,6 @@ export class ProfileController {
    */
   @Patch()
   @UseGuards(AuthGuard('jwt'))
-  @UseRoles({
-    resource: 'profiles',
-    action: 'update',
-    possession: 'any',
-  })
   @ApiResponse({ status: 200, description: 'Patch Profile Request Received' })
   @ApiResponse({ status: 400, description: 'Patch Profile Request Failed' })
   async patchProfile(@Body() payload: PatchProfileDto) {
@@ -71,12 +65,7 @@ export class ProfileController {
    * @returns {Promise<IGenericMessageBody>} whether or not the profile has been deleted
    */
   @Delete(':username')
-  @UseGuards(AuthGuard('jwt'), ACGuard)
-  @UseRoles({
-    resource: 'profiles',
-    action: 'delete',
-    possession: 'any',
-  })
+  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({ status: 200, description: 'Delete Profile Request Received' })
   @ApiResponse({ status: 400, description: 'Delete Profile Request Failed' })
   async delete(

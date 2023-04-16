@@ -25,7 +25,8 @@ type LogLevel =
   | 'debug'
   | 'silly';
 
-interface Config {
+export interface Config {
+  appName: string;
   appPort: number;
   privateKeyFile: string;
   privateKeyPassphrase: string;
@@ -34,6 +35,9 @@ interface Config {
   localCacheTtl: number;
 
   redisUrl: string;
+
+  JWTTokenSecret: string;
+  JWTExpiredTime: number;
 
   mongo: {
     host: string;
@@ -60,10 +64,13 @@ interface Config {
 }
 
 const config: Config = {
+  appName: parsedEnv.APP_NAME as string,
   appPort: parsedEnv.APP_PORT as number,
   privateKeyFile: parsedEnv.PRIVATE_KEY_FILE as string,
   privateKeyPassphrase: parsedEnv.PRIVATE_KEY_PASSPHRASE as string,
   publicKeyFile: parsedEnv.PUBLIC_KEY_FILE as string,
+  JWTTokenSecret: parsedEnv.WEBTOKEN_SECRET_KEY as string,
+  JWTExpiredTime: parsedEnv.EXPIRATION_TIME as number,
 
   localCacheTtl: parsedEnv.LOCAL_CACHE_TTL as number,
 

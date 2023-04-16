@@ -1,4 +1,5 @@
 import { Schema, Document } from 'mongoose';
+import { AppRoles } from '../../config/app.roles';
 
 /**
  * Mongoose Profile Schema
@@ -9,6 +10,7 @@ export const Profile = new Schema({
   name: { type: String, required: true },
   password: { type: String, required: true },
   avatar: { type: String, required: true },
+  roles: [{ type: String }],
   date: {
     type: Date,
     default: Date.now,
@@ -43,6 +45,10 @@ export interface IProfile extends Document {
    * Gravatar
    */
   readonly avatar: string;
+  /**
+   * Roles
+   */
+  readonly roles: AppRoles;
   /**
    * Date
    */

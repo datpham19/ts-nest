@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 
 import { IProfile } from '../../models/mongo/profile.model';
+
 import { RegisterDto } from '../auth/dtos/register.dto';
+import { AppRoles } from '../../config/app.roles';
 import { PatchProfileDto } from './profile.dto';
 
 /**
@@ -83,6 +85,7 @@ export class ProfileService {
     const createdProfile = new this.profileModel({
       ...payload,
       password: crypto.createHmac('sha256', payload.password).digest('hex'),
+      roles: AppRoles.ADMIN,
     });
 
     return createdProfile.save();
@@ -90,7 +93,7 @@ export class ProfileService {
 
   /**
    * Edit profile data
-   * @param {PatchProfilePayload} payload
+   * @param {PatchProfileDto} payload
    * @returns {Promise<IProfile>} mutated profile data
    */
   async edit(payload: PatchProfileDto): Promise<IProfile> {
@@ -99,11 +102,11 @@ export class ProfileService {
       { username },
       payload,
     );
-    // if (updatedProfile.nModified !== 1) {
-    //   throw new BadRequestException(
-    //     'The profile with that username does not exist in the system. Please try another username.',
-    //   );
-    // }
+    if (updatedProfile.modifiedCount !== 1) {
+      throw new BadRequestException(
+        'The profile with that username does not exist in the system. Please try another username.',
+      );
+    }
     return this.getByUsername(username);
   }
 

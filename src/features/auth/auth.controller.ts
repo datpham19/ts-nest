@@ -1,8 +1,7 @@
 import { Controller, Body, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
+import { AuthService, ITokenReturnBody } from './auth.service';
 import { ProfileService } from '../profiles/profile.service';
-import { ITokenReturnBody } from './interfaces/login.interface';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 
@@ -24,7 +23,7 @@ export class AuthController {
 
   /**
    * Login route to validate and create tokens for users
-   * @param {LoginPayload} payload the login dto
+   * @param {LoginDto} payload the login dto
    */
   @Post('login')
   @ApiResponse({ status: 201, description: 'Login Completed' })

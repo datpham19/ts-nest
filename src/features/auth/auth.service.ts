@@ -1,9 +1,28 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+
 import { ProfileService } from '../profiles/profile.service';
-import { ITokenReturnBody } from './interfaces/login.interface';
 import { IProfile } from '../../models/mongo/profile.model';
 import { LoginDto } from './dtos/login.dto';
+import { ConfigService } from '../../config/config.service';
+
+/**
+ * Models a typical Login/Register route return body
+ */
+export interface ITokenReturnBody {
+  /**
+   * When the token is to expire in seconds
+   */
+  expires: string;
+  /**
+   * A human-readable format of expires
+   */
+  expiresPrettyPrint: string;
+  /**
+   * The Bearer token
+   */
+  token: string;
+}
 
 /**
  * Authentication Service
@@ -24,8 +43,11 @@ export class AuthService {
    */
   constructor(
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
     private readonly profileService: ProfileService,
-  ) {}
+  ) {
+    this.expiration = this.configService.get('WEBTOKEN_EXPIRATION_TIME');
+  }
 
   /**
    * Creates a signed jwt token based on IProfile payload
