@@ -11,6 +11,7 @@ import { uri } from '../../lib/mongo.providers';
 import { Profile, ProfileSchema } from '../../models/mongo/profile.model';
 
 import { MongooseModule, MongooseModuleAsyncOptions } from '@nestjs/mongoose';
+import { LoginDto } from './dtos/login.dto';
 describe('AuthController', () => {
   let controller: AuthController;
   beforeEach(async () => {
@@ -21,33 +22,50 @@ describe('AuthController', () => {
           imports: [ConfigModule],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) =>
-            ({
-              uri: uri,
-              user: configService.get('MONGO_USERNAME'),
-              pass: configService.get('MONGO_PASSWORD'),
-              useNewUrlParser: true,
-              useUnifiedTopology: true,
-            } as MongooseModuleAsyncOptions),
+          ({
+            uri: uri,
+            user: configService.get('MONGO_USERNAME'),
+            pass: configService.get('MONGO_PASSWORD'),
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          } as MongooseModuleAsyncOptions),
         }),
         MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }])
       ],
       controllers: [AuthController],
-      providers: [AuthService,JwtService, ConfigService, ProfileService],
+      providers: [AuthService, JwtService, ConfigService, ProfileService],
     }).compile();
     const configService = module.get<ConfigService>(ConfigService);
-    console.log(configService)
     controller = module.get<AuthController>(AuthController);
   });
 
-  it('Register successfully', async() => {
-    let result = await controller.register(
-      {
-        "email": "nqt900@gmail.com",
-        "username": "nqt900",
-        "name": "thinh",
-        "password": "abc@1234"
-      }
-    )
-    expect(result.token).not.toBeNull()
+  it('Register new user', async () => {
+    try {
+      let result = await controller.register(
+        {
+          "email": "nqt900@gmail.com",
+          "username": "nqt900",
+          "name": "thinh",
+          "password": "abc@1234"
+        }
+      )
+      expect(result.token).not.toBeNull()
+    }
+    catch (e) {
+      expect(e.response.message).toEqual('The account with the provided username currently exists. Please choose another one.')
+    }
   });
+
+  it('Login', async() => {
+    try {
+      let loginParam = new LoginDto()
+      loginParam.username = 'nqt900'
+      loginParam.password = 'abc@1234'
+      let result = await controller.login(loginParam)
+      expect(result.token).not.toBeNull()
+    }
+    catch (e) {
+      expect(e.response.message).toEqual('The account with the provided username currently exists. Please choose another one.')
+    }
+  })
 });
