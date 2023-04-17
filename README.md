@@ -1,38 +1,41 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Table of contents
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+* auto-gen TOC:
+  {:toc}
 
-## Description
+### Tech stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Language: [NodeJS](https://nodejs.org/en/)
+- Database: [Redis](https://redis.io/), [MongoDB](https://www.mongodb.com/), [PostgreSQL](https://www.postgresql.org/), [ElasticSearch](https://www.elastic.co/)
+- Container: [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/compose/)
+- Package manager: [Yarn](https://yarnpkg.com/en/)
+- Linter: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/)
+- Package and library:
+    - Typing: [TypeScript](https://www.typescriptlang.org/)
+    - Framework: [express](https://expressjs.com/)
+    - Authentication: [passport](https://www.npmjs.com/package/passport), [passport-jwt](https://www.npmjs.com/package/passport-jwt), [passport-local](https://www.npmjs.com/package/passport-local)
+    - Logger: [winston](https://npmjs.com/package/winston), [morgan](https://www.npmjs.com/package/morgan)
+    - Validation: [class-validator](https://www.npmjs.com/package/class-validator), [class-transformer](https://www.npmjs.com/package/class-transformer)
+    - ORM: [Sequelize](https://sequelize.org/), [Mongoose](https://mongoosejs.com/)
+    - Cache: [redis](https://www.npmjs.com/package/redis)
+    - Search: [elasticsearch](https://www.npmjs.com/package/elasticsearch)
+- Testing: [Jest](https://jestjs.io/), [Supertest](https://www.npmjs.com/package/supertest)
 
-## Installation
+# Setup and development
+
+## Coding convention and principles
+
+- [Read this]('/docs/coding-convention.md')
+
+### Installation
 
 ```bash
 $ yarn install
 ```
 
-## Running the app
+### Running the app
 
 ```bash
 # development
@@ -45,7 +48,7 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Test
+### Test
 
 ```bash
 # unit tests
@@ -58,31 +61,36 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
-## Support
+### Generators
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-
-
-# New feature
 ```bash
 nest new <projectname> # Generate new project
 nest g co <featurename> # Generate controller feature (controller.spec, controller)
 ```
 
-```markdown
-*.spec.ts: unit test
-```
+# Structure
+> **_NOTE:_** </br>
+> Module small: 5 files (`controller`, `service`, `dto`, `interface`, `spec`) </br>
+> Module medium: 3 files (`controller`, `service`, `spec`) + 2 dir `dtos/` and `interfaces/`
 
-Module small: 5 files
-Module medium: 3 files + 2 dir `dtos/` `interfaces/` 
+| Name                                         | Description                                                                                                                                                                  |
+|----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **dist/**                                    | Compiled source files will be placed here                                                                                                                                    |
+| **src/**                                     | Source files                                                                                                                                                                 |
+| **src/docker/**                              | Dockerfile and docker-compose.yml                                                                                                                                            |
+| **src/config/**                              | Configure environment and swagger                                                                                                                                            |
+| **src/features/{feat}/{feat}.module.ts**     | A feature module simply organizes code relevant for a specific feature, keeping code organized and establishing clear boundaries.                                            |
+| **src/features/{feat}/{feat}.controller.ts** | Controllers are responsible for handling incoming **requests** and returning **responses** to the client.                                                                    |
+| **src/features/{feat}/{feat}.service.ts**    | This service will be responsible for data storage and retrieval, and is designed to be used by the `Controller`                                                              |
+| **src/features/{feat}/{feat}.dto.ts**        | A DTO is an object that defines how the data will be sent over the **request**                                                                                               |
+| **src/features/{feat}/{feat}.interface.ts**  | A Schema define how the data will be **response**                                                                                                                            |
+| **src/features/{feat}/{feat}.spec.ts**       | Unit test                                                                                                                                                                    |
+| **src/lib/**                                 | Connection of databases, using [`providers`](https://docs.nestjs.com/providers#provider-registration)                                                                        |
+| **src/models/**                              | Model entities of database. Each type of database in a difference dir (Eg: `pg/`, `mongo/`)                                                                                  |
+| **src/middleware/**                          | Additional middleware. Middleware functions have access to the request and response objects, and the next() middleware function in the application’s request-response cycle. |
+| **src/utils/**                               | Additional function, constant, customized library                                                                                                                            |
+| **src/app.module.ts**                        | The **root module** is the starting point Nest uses to build the application graph                                                                                           |
+| **src/main.ts**                              | The entry file of the application which uses the core function NestFactory to create a Nest application instance                                                             |
+| .env.example                                 | Example Environment configurations                                                                                                                                           |
+| .env.test                                    | Test environment configurations                                                                                                                                              |
 
