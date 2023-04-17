@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '../../config/config.service';
 import { ConfigModule } from '../../config/config.module';
 import { ProfileService } from '../profiles/profile.service';
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from './auth.module';
 import { ProfileModule } from '../profiles/profile.module';
 import { uri } from '../../lib/mongo.providers';
 import { Profile, ProfileSchema } from '../../models/mongo/profile.model';
