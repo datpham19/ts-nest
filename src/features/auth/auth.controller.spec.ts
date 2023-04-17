@@ -12,7 +12,15 @@ describe('AuthController', () => {
     controller = module.get<AuthController>(AuthController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('Register successfully', async() => {
+    let result = await controller.register(
+      {
+        "email": "nqt900@gmail.com",
+        "username": "nqt900",
+        "name": "thinh",
+        "password": "abc@1234"
+      }
+    )
+    expect(result.token).not.toBeNull()
   });
 });
