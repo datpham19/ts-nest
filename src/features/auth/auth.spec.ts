@@ -9,7 +9,6 @@ import { AuthModule } from './auth.module';
 import { ProfileModule } from '../profiles/profile.module';
 import { uri } from '../../lib/mongo.providers';
 import { Profile, ProfileSchema } from '../../models/mongo/profile.model';
-
 import { MongooseModule, MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 import { LoginDto } from './dtos/login.dto';
 describe('AuthController', () => {

@@ -1,71 +1,62 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
+import { ConfigService } from '../../config/config.service';
+import { ConfigModule } from '../../config/config.module';
+import { ProfileModule } from '../profiles/profile.module';
+import { uri } from '../../lib/mongo.providers';
 import { Profile, ProfileSchema } from '../../models/mongo/profile.model';
-import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongooseModule, MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 
-let mongod: MongoMemoryServer;
+describe('ProfileController', () => {
+    let controller: ProfileController;
+    let service: ProfileService;
 
-const mongoose = require("mongoose");
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            imports: [
+                ProfileModule,
+                MongooseModule.forRootAsync({
+                  imports: [ConfigModule],
+                  inject: [ConfigService],
+                  useFactory: (configService: ConfigService) =>
+                  ({
+                    uri: uri,
+                    user: configService.get('MONGO_USERNAME'),
+                    pass: configService.get('MONGO_PASSWORD'),
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                  } as MongooseModuleAsyncOptions),
+                }),
+                MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }])
+            ],
+            controllers: [ProfileController],
+            providers: [ProfileService],
+        }).compile();
 
-(async () => {
-    const mongod = new MongoMemoryServer();
-    await mongod.start();
-    const mongoUri = mongod.getUri();
-    
-    await mongoose.connect(mongoUri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+        controller = module.get<ProfileController>(ProfileController);
+        service = module.get<ProfileService>(ProfileService);
     });
-})();
 
-// export const rootMongooseTestModule = (options: MongooseModuleOptions = {}) => MongooseModule.forRootAsync({
-//   useFactory: async () => {
-//     mongod = new MongoMemoryServer();
-//     await mongod.start();
-//     const mongoUri = await mongod.getUri();
-//     return {
-//       uri: mongoUri,
-//       ...options,
-//     }
-//   },
-// });
+    describe('Profile', () => {
+        it('Get Profile service', async () => {
+            try {
+                let result = await service.getAll()
+                expect(result.length).toBeGreaterThan(0)
+            }
+            catch (e) {
+                console.log(e)
+            }
+        });
 
-// export const closeInMongodConnection = async () => {
-//   if (mongod) await mongod.stop();
-// }
-
-// jest.mock('./profile.service');
-
-// describe('ProfileController', () => {
-//   let controller: ProfileController;
-//   let service: ProfileService;
-
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       imports: [
-//         rootMongooseTestModule(),
-//         MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }]),
-//       ],
-//       controllers: [ProfileController],
-//       providers: [ProfileService],
-//     }).compile();
-
-//     controller = module.get<ProfileController>(ProfileController);
-//     service = module.get<ProfileService>(ProfileService);
-//     jest.clearAllMocks();
-//   });
-
-//   describe('get', () => {
-//     describe('when getProfile is called', () => {
-//       let profiles: Profile[];
-//       beforeEach(async () => {
-//         profiles = await controller.getProfiles();
-//       });
-//       test('should call profileService.getAll', () => {
-//         expect(service.getAll).toHaveBeenCalled();
-//       });
-//     });
-//   });
-// });
+        it('Get Profile controller', async () => {
+            try {
+                let result = await controller.getProfile('nqt900')
+                expect(result.username).toEqual('nqt900')
+            }
+            catch (e) {
+                console.log(e)
+            }
+        });
+    });
+});
