@@ -3,7 +3,7 @@ import * as dotenvParseVariables from 'dotenv-parse-variables';
 import * as path from 'path';
 
 const env = dotenvExtended.load({
-  path: process.env.ENV_FILE,
+  path: path.resolve(__dirname, '../../.env'),
   defaults: path.resolve(__dirname, '../../.env'),
   schema: path.resolve(__dirname, '../../.env'),
   includeProcessEnv: true,
