@@ -1,7 +1,7 @@
 import config from '../config';
 import * as mongoose from 'mongoose';
 
-const uri = `mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.database}?authSource=admin`;
+export const uri = `mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.database}?authSource=admin`;
 
 export const mongoProviders = [
   {

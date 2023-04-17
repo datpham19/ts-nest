@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { mongoProviders } from './mongo.providers';
 import { pgProviders } from './pg.providers';
+import { redisProviders } from './redis.providers';
 
 @Module({
-  providers: [...mongoProviders, ...pgProviders],
-  exports: [...mongoProviders, ...pgProviders],
+  providers: [...pgProviders, ...redisProviders],
+  exports: [...pgProviders, ...redisProviders],
 })
 export class DatabaseModule {}

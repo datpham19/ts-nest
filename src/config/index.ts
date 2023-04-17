@@ -9,55 +9,76 @@ const env = dotenvExtended.load({
   includeProcessEnv: true,
   silent: false,
   errorOnMissing: true,
-  errorOnExtra: true
+  errorOnExtra: true,
 });
-
 
 const parsedEnv = dotenvParseVariables(env);
 
 // Define log levels type (silent + Winston default npm)
-type LogLevel = 'silent' | 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
+type LogLevel =
+  | 'silent'
+  | 'error'
+  | 'warn'
+  | 'info'
+  | 'http'
+  | 'verbose'
+  | 'debug'
+  | 'silly';
 
-interface Config {
-  appPort: number
-  privateKeyFile: string
-  privateKeyPassphrase: string
-  publicKeyFile: string,
+export interface Config {
+  appName: string;
+  appPort: number;
+  privateKeyFile: string;
+  privateKeyPassphrase: string;
+  publicKeyFile: string;
 
-  localCacheTtl: number,
+  localCacheTtl: number;
 
-  redisUrl: string,
+  redisUrl: string;
+
+  JWTTokenSecret: string;
+  JWTExpiredTime: number;
 
   mongo: {
-    host: string,
-    port: number,
-    user: string,
-    password: string,
-    database: string,
-    useCreateIndex: boolean,
-    autoIndex: boolean,
-    debug: boolean
-  },
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+    useCreateIndex: boolean;
+    autoIndex: boolean;
+    debug: boolean;
+  };
 
   pg: {
-    host: string,
-    port: number,
-    user: string,
-    password: string,
-    database: string
-  }
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+  };
 
-  morganLogger: boolean
-  morganBodyLogger: boolean
-  exmplDevLogger: boolean
-  loggerLevel: LogLevel
+  redis: {
+    host: string;
+    port: number;
+    password: string;
+    username: string;
+    db: number;
+  };
+
+  morganLogger: boolean;
+  morganBodyLogger: boolean;
+  loggerLevel: LogLevel;
 }
 
 const config: Config = {
+  appName: parsedEnv.APP_NAME as string,
   appPort: parsedEnv.APP_PORT as number,
   privateKeyFile: parsedEnv.PRIVATE_KEY_FILE as string,
   privateKeyPassphrase: parsedEnv.PRIVATE_KEY_PASSPHRASE as string,
   publicKeyFile: parsedEnv.PUBLIC_KEY_FILE as string,
+  JWTTokenSecret: parsedEnv.WEBTOKEN_SECRET_KEY as string,
+  JWTExpiredTime: parsedEnv.EXPIRATION_TIME as number,
 
   localCacheTtl: parsedEnv.LOCAL_CACHE_TTL as number,
 
@@ -79,13 +100,20 @@ const config: Config = {
     port: parsedEnv.PG_PORT as number,
     user: parsedEnv.PG_USERNAME as string,
     password: parsedEnv.PG_PASSWORD as string,
-    database: parsedEnv.PG_NAME as string
+    database: parsedEnv.PG_NAME as string,
+  },
+
+  redis: {
+    host: parsedEnv.REDIS_HOST as string,
+    port: parsedEnv.REDIS_PORT as number,
+    password: parsedEnv.REDIS_PASSWORD as string,
+    username: parsedEnv.REDIS_USERNAME as string,
+    db: parsedEnv.REDIS_DB as number,
   },
 
   morganLogger: parsedEnv.MORGAN_LOGGER as boolean,
   morganBodyLogger: parsedEnv.MORGAN_BODY_LOGGER as boolean,
-  exmplDevLogger: parsedEnv.EXMPL_DEV_LOGGER as boolean,
-  loggerLevel: parsedEnv.LOGGER_LEVEL as LogLevel
+  loggerLevel: parsedEnv.LOGGER_LEVEL as LogLevel,
 };
 
 export default config;
