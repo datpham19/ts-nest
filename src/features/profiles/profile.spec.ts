@@ -28,7 +28,7 @@ describe('ProfileController', () => {
                     useUnifiedTopology: true,
                   } as MongooseModuleAsyncOptions),
                 }),
-                MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }])
+                MongooseModule.forFeature([{ name: Profile.name, schema: ProfileSchema }])
             ],
             controllers: [ProfileController],
             providers: [ProfileService],
