@@ -1,7 +1,7 @@
 import { parse } from 'dotenv';
 import * as joi from '@hapi/joi';
 import * as fs from 'fs';
-
+import * as path from 'path'; 
 /**
  * Key-value mapping
  */
@@ -23,7 +23,7 @@ export class ConfigService {
    * @param {string} filePath
    */
   constructor(filePath: string) {
-    const config = parse(fs.readFileSync(filePath));
+    const config = parse(fs.readFileSync(filePath || path.resolve(__dirname, '../../.env')));
     this.envConfig = ConfigService.validateInput(config);
   }
 
